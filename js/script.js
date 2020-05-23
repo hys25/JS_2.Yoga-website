@@ -1,12 +1,12 @@
 window.addEventListener('DOMContentLoaded', function() {
 
     'use strict';
-    let tab = document.querySelectorAll('.info-header-tab'), //class with tabs
-        info = document.querySelector('.info-header'), //block that contains tabs
-        tabContent = document.querySelectorAll('.info-tabcontent'); //container of content that should switch
+    let tab = document.querySelectorAll('.info-header-tab'),
+        info = document.querySelector('.info-header'),
+        tabContent = document.querySelectorAll('.info-tabcontent');
 
-    function hideTabContent (a) {
-        for (let i = a; i<tabContent.length; i++){
+    function hideTabContent(a) {
+        for (let i = a; i < tabContent.length; i++) {
             tabContent[i].classList.remove('show');
             tabContent[i].classList.add('hide');
         }
@@ -14,101 +14,98 @@ window.addEventListener('DOMContentLoaded', function() {
 
     hideTabContent(1);
 
-    function showTabContent(b){
-        if (tabContent[b].classList.contains('hide')){
+    function showTabContent(b) {
+        if (tabContent[b].classList.contains('hide')) {
             tabContent[b].classList.remove('hide');
             tabContent[b].classList.add('show');
         }
     }
 
-    info.addEventListener('click', function(event){
+    info.addEventListener('click', function(event) {
         let target = event.target;
-        if (target && target.classList.contains('info-header-tab')){
-            for (let i = 0; i < tab.length; i++) {
-                if (target == tab[i]){
-                    hideTabContent (0);
+        if (target && target.classList.contains('info-header-tab')) {
+            for(let i = 0; i < tab.length; i++) {
+                if (target == tab[i]) {
+                    hideTabContent(0);
                     showTabContent(i);
                     break;
                 }
             }
         }
+
     });
 
-    //Timer
+    // Timer
 
-    let deadline = '2021-02-19';
+    let deadline = '2020-10-3';
 
-    function getTimeRemaining(endtime) {  //function that defines the rest of the time
-        let t = Date.parse(endtime) - Date.parse(new Date()),  //date difference (milliseconds)
+    function getTimeRemaining(endtime) {
+        let t = Date.parse(endtime) - Date.parse(new Date()),
         seconds = Math.floor((t/1000) % 60),
         minutes = Math.floor((t/1000/60) % 60),
-        hours = Math.floor((t/1000/60/60) % 24),
-        days = Math.floor((t/(1000*60*60*24)));
+        hours = Math.floor((t/(1000*60*60)));
 
-        return{
+        return {
             'total' : t,
-            'days' : days,
             'hours' : hours,
             'minutes' : minutes,
             'seconds' : seconds
         };
     }
 
-    function setClock(id, endtime) { //function that turns a static layout into a dynamic one
+    function setClock(id, endtime) {
         let timer = document.getElementById(id),
-            days = timer.querySelector('.days'),
             hours = timer.querySelector('.hours'),
             minutes = timer.querySelector('.minutes'),
             seconds = timer.querySelector('.seconds'),
             timeInterval = setInterval(updateClock, 1000);
 
-        function updateClock(){ //function that updates the watch every second
+        function updateClock() {
             let t = getTimeRemaining(endtime);
 
             function addZero(num){
-                if(num <= 9) {
-                    return '0' + num;
-                } else return num;
-            };
-            days.textContent = addZero(t.days);
+                        if(num <= 9) {
+                            return '0' + num;
+                        } else return num;
+                    };
+
             hours.textContent = addZero(t.hours);
             minutes.textContent = addZero(t.minutes);
             seconds.textContent = addZero(t.seconds);
 
-
             if (t.total <= 0) {
                 clearInterval(timeInterval);
-                days.textContent = '00';
                 hours.textContent = '00';
                 minutes.textContent = '00';
                 seconds.textContent = '00';
             }
         }
+
     }
 
-    setClock ('timer', deadline)
+    setClock('timer', deadline);
 
-//Modal window
+    // Modal
 
-    let more = document.querySelector('.more'),  //button to click on to open the modal window
-        overlay = document.querySelector('.overlay'), //modal window container
-        close = document.querySelector('.popup-close'); //cross that will close the window
+    let more = document.querySelector('.more'),
+        overlay = document.querySelector('.overlay'),
+        close = document.querySelector('.popup-close');
 
-    more.addEventListener('click', function(){
-        overlay.style.display = 'block'; //open styles
-        this.classList.add('more-splash');  //add a CSS animation to this button
-        document.body.style.overflow = 'hidden';//prevent the user from flipping through the page when the modal window is open
+    more.addEventListener('click', function() {
+        overlay.style.display = 'block';
+        this.classList.add('more-splash');
+        document.body.style.overflow = 'hidden';
     });
 
-    close.addEventListener('click', function(){
-        overlay.style.display = 'none'; //close styles
-        more.classList.remove('more-splash');  //remove a CSS animation to this button(more)
-        document.body.style.overflow = '';//lift the page flip ban
+    close.addEventListener('click', function() {
+        overlay.style.display = 'none';
+        more.classList.remove('more-splash');
+        document.body.style.overflow = '';
     });
 
      // Form
 
-     let message = {
+    let message = {
         loading: 'Загрузка...',
         success: 'Спасибо! Скоро мы с вами свяжемся!',
         failure: 'Что-то пошло не так...'
@@ -153,7 +150,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
     // Slider
 
     let slideIndex = 1,
@@ -185,7 +181,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     function plusSlides(n) {
-        showSlides(slideIndex += n); 
+        showSlides(slideIndex += n);
     }
     function currentSlide(n) {
         showSlides(slideIndex = n);
@@ -207,14 +203,47 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Calc
+
+    let persons = document.querySelectorAll('.counter-block-input')[0],
+        restDays = document.querySelectorAll('.counter-block-input')[1],
+        place = document.getElementById('select'),
+        totalValue = document.getElementById('total'),
+        personsSum = 0,
+        daysSum = 0,
+        total = 0;
+
+    totalValue.innerHTML = 0;
+
+    persons.addEventListener('change', function() {
+        personsSum = +this.value;
+        total = (daysSum + personsSum)*4000;
+
+        if(restDays.value == '') {
+            totalValue.innerHTML = 0;
+        } else {
+            totalValue.innerHTML = total;
+        }
+    });
+
+    restDays.addEventListener('change', function() {
+        daysSum = +this.value;
+        total = (daysSum + personsSum)*4000;
+
+        if(persons.value == '') {
+            totalValue.innerHTML = 0;
+        } else {
+            totalValue.innerHTML = total;
+        }
+    });
+
+    place.addEventListener('change', function() {
+        if (restDays.value == '' || persons.value == '') {
+            totalValue.innerHTML = 0;
+        } else {
+            let a = total;
+            totalValue.innerHTML = a * this.options[this.selectedIndex].value;
+        }
+    });
+
 });
-
-
-
-
-
-
-
-
-
-
